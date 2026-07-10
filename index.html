@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeHer - AI-Powered Women Safety & Emergency Assistance System</title>
+  <meta name="description" content="SafeHer is a state-of-the-art AI-powered platform for women's safety, providing emergency SOS response, GPS mapping, voice assistance, and route risk assessment.">
+  
+  <!-- Font Awesome CDNs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Leaflet Map CSS CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  
+  <!-- Core Design System CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation Menu -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fa-solid fa-shield-halved brand-icon"></i>
+        <span class="brand-name">SafeHer</span>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item active" data-view="home">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        </li>
+        <li class="menu-item" data-view="about">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-circle-info"></i><span>About SafeHer</span></a>
+        </li>
+        <li class="menu-item" data-view="features">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-circle-nodes"></i><span>Safety Features</span></a>
+        </li>
+        <li class="menu-item" data-view="dashboard">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-table-columns"></i><span>User Dashboard</span></a>
+        </li>
+        <li class="menu-item" data-view="admin">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-chart-line"></i><span>Admin Panel</span></a>
+        </li>
+        <li class="menu-item" data-view="emergency">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-triangle-exclamation"></i><span>Emergency Console</span></a>
+        </li>
+        <li class="menu-item" data-view="chatbot">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-robot"></i><span>AI Chatbot</span></a>
+        </li>
+        <li class="menu-item" data-view="route">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-route"></i><span>Safe Route Finder</span></a>
+        </li>
+        <li class="menu-item" data-view="services">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-map-location-dot"></i><span>Nearby Emergency</span></a>
+        </li>
+        <li class="menu-item" data-view="contacts">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-address-book"></i><span>Emergency Contacts</span></a>
+        </li>
+        <li class="menu-item" data-view="resources">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-book-bookmark"></i><span>Safety Resources</span></a>
+        </li>
+        <li class="menu-item" data-view="contact-us">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-paper-plane"></i><span>Contact & FAQs</span></a>
+        </li>
+        <li class="menu-item" data-view="registration" id="sidebar-auth-item">
+          <a href="#" onclick="event.preventDefault();"><i class="fa-solid fa-user-plus"></i><span>Register / Login</span></a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <a href="#" class="user-profile-mini" id="mini-profile-card">
+          <div class="user-avatar-mini" id="mini-profile-avatar">G</div>
+          <div class="user-info-mini">
+            <span class="user-name-mini" id="mini-profile-name">Guest User</span>
+            <span class="user-role-mini" id="mini-profile-status">Safety Unprotected</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+    
+    <!-- Main Application Wrapper -->
+    <div class="main-wrapper">
+      
+      <!-- Top header bar sticky -->
+      <header class="top-header">
+        <h2 class="page-title-display" id="app-current-page-title">Home Page</h2>
+        <div class="header-actions">
+          
+          <!-- Light/Dark Mode Toggle Button -->
+          <div class="theme-toggle-btn" id="btn-toggle-theme" title="Toggle Light/Dark Theme">
+            <i class="fa-solid fa-moon"></i>
+          </div>
+
+          <!-- Voice Activated Badge Trigger -->
+          <div class="voice-status-badge" id="btn-toggle-voice" title="Click to toggle Voice Detection Mode">
+            <i class="fa-solid fa-microphone-slash"></i>
+            <span id="voice-badge-text">Voice Detection Off</span>
+          </div>
+          
+          <!-- Urgent SOS trigger -->
+          <button class="btn-header-sos" id="btn-header-sos-trigger">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            SOS EMERGENCY
+          </button>
+        </div>
+      </header>
+      
+      <!-- Main Content Views Container -->
+      <main class="content-area">
+        <div id="alert-notification-area"></div>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 1: HOME PAGE -->
+        <!-- ============================================ -->
+        <section id="view-home" class="view-section active">
+          <div class="hero-banner">
+            <div class="hero-content">
+              <div class="hero-badge">
+                <i class="fa-solid fa-shield-heart"></i> AI-Powered Protection Network
+              </div>
+              <h1 class="hero-title">Your Smart Shield <span>In The Dark</span></h1>
+              <p class="hero-subtitle">SafeHer combines advanced risk prediction, voice-activated emergency response, and localized support layers to offer immediate assistance wherever you go.</p>
+              <div class="hero-cta">
+                <button class="btn-primary" onclick="window.appRouter.navigateTo('registration')">
+                  <i class="fa-solid fa-user-shield"></i> Get Protected Free
+                </button>
+                <button class="btn-secondary" onclick="window.appRouter.navigateTo('about')">
+                  Explore Project
+                </button>
+              </div>
+            </div>
+            <div class="hero-graphic">
+              <div class="hero-shield-wrapper">
+                <i class="fa-solid fa-shield-halved hero-shield-icon"></i>
+                <div class="hero-decor-ring ring-1"></div>
+                <div class="hero-decor-ring ring-2"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Project Statistics Summary -->
+          <div class="stats-row grid-4">
+            <div class="card-glass stat-card">
+              <div class="stat-num" id="stat-responses">4.2s</div>
+              <div class="stat-label">Average Response Time</div>
+            </div>
+            <div class="card-glass stat-card">
+              <div class="stat-num" id="stat-users">150K+</div>
+              <div class="stat-label">Active Protected Users</div>
+            </div>
+            <div class="card-glass stat-card">
+              <div class="stat-num" id="stat-alerts">45K+</div>
+              <div class="stat-label">Successful Interventions</div>
+            </div>
+            <div class="card-glass stat-card">
+              <div class="stat-num" id="stat-accuracy">98.6%</div>
+              <div class="stat-label">AI Route Accuracy</div>
+            </div>
+          </div>
+          
+          <!-- Project Core Features Cards -->
+          <h2 class="home-section-title">Immediate Emergency Features</h2>
+          <p class="home-section-subtitle">A multi-layered ecosystem designed to act fast in critical conditions.</p>
+          
+          <div class="grid-3">
+            <div class="card-glass">
+              <i class="fa-solid fa-bullhorn" style="font-size: 2.2rem; color: var(--accent-sos); margin-bottom: 16px;"></i>
+              <h3 style="margin-bottom:12px;">Instant SOS Alarms</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">One-click or voice-triggered broadcasting that notifies contacts, captures live coordinates, and begins audio capture logs immediately.</p>
+              <button class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" onclick="window.appRouter.navigateTo('emergency')">Launch Console</button>
+            </div>
+            <div class="card-glass">
+              <i class="fa-solid fa-compass" style="font-size: 2.2rem; color: var(--primary); margin-bottom: 16px;"></i>
+              <h3 style="margin-bottom:12px;">AI Safe Routing</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">Analyzes local security parameters, lightings, crowd density maps, and historical reports to find the safest route to your destination.</p>
+              <button class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" onclick="window.appRouter.navigateTo('route')">Find Safest Path</button>
+            </div>
+            <div class="card-glass">
+              <i class="fa-solid fa-ear-listen" style="font-size: 2.2rem; color: var(--color-success); margin-bottom: 16px;"></i>
+              <h3 style="margin-bottom:12px;">Speech Key Recognition</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">Hands-free emergency activation. Triggers safe mode instantly when you speak safety codes: "Help", "SOS", or "Emergency".</p>
+              <button class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" onclick="window.appRouter.navigateTo('features')">Learn More</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 2: ABOUT PAGE -->
+        <!-- ============================================ -->
+        <section id="view-about" class="view-section">
+          <div class="about-grid">
+            <div class="about-top-cards">
+              <div class="card-glass">
+                <i class="fa-solid fa-heart-pulse" style="font-size: 2.5rem; color: var(--accent-sos); margin-bottom: 16px;"></i>
+                <h3 style="margin-bottom:12px;">Our Mission</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Empowering women with tools that enable complete autonomy over travel, personal security, and peace of mind by leveraging real-time technologies.</p>
+              </div>
+              <div class="card-glass">
+                <i class="fa-solid fa-eye" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
+                <h3 style="margin-bottom:12px;">Our Vision</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Creating zero-friction safety barriers where smart cities and digital response layers work hand-in-hand to build safe urban environments.</p>
+              </div>
+              <div class="card-glass">
+                <i class="fa-solid fa-bullseye" style="font-size: 2.5rem; color: var(--color-success); margin-bottom: 16px;"></i>
+                <h3 style="margin-bottom:12px;">Core Objectives</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Deliver ultra-fast (sub 5 seconds) alerts, provide intelligent route risk scoring, collect tamper-proof audio evidence, and maintain private, local-first workflows.</p>
+              </div>
+            </div>
+            
+            <div class="card-glass workflow-section">
+              <h2 style="margin-bottom: 8px;">SafeHer Operational Workflow</h2>
+              <p style="color:var(--text-muted); font-size:0.95rem;">Understand the steps that keep you protected in real time.</p>
+              
+              <div class="workflow-timeline">
+                <div class="workflow-step">
+                  <div class="workflow-step-num">1</div>
+                  <span class="workflow-step-title">Register Details</span>
+                  <span class="workflow-step-desc">Enter core info and emergency contacts.</span>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-step-num">2</div>
+                  <span class="workflow-step-title">Track Route Risk</span>
+                  <span class="workflow-step-desc">Analyze route safety indicators prior to transit.</span>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-step-num">3</div>
+                  <span class="workflow-step-title">Activate SOS Mode</span>
+                  <span class="workflow-step-desc">Triggers via app clicks or voice key identification.</span>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-step-num">4</div>
+                  <span class="workflow-step-title">Alert & Dispatch</span>
+                  <span class="workflow-step-desc">Forwards coordinates & commences audio recording.</span>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-step-num">5</div>
+                  <span class="workflow-step-title">Continuous Care</span>
+                  <span class="workflow-step-desc">Guided AI advice keeps user calm till safety arrival.</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h2 style="margin-bottom: 20px; text-align: center;">AI & Integrated Technologies</h2>
+              <div class="tech-grid">
+                <div class="card-glass tech-card">
+                  <i class="fa-solid fa-brain tech-icon"></i>
+                  <h4>Natural Language Routing</h4>
+                  <p style="color: var(--text-muted); font-size:0.8rem; margin-top:8px;">Semantic models process voice messages to understand intent.</p>
+                </div>
+                <div class="card-glass tech-card">
+                  <i class="fa-solid fa-map tech-icon"></i>
+                  <h4>Risk Prediction Engines</h4>
+                  <p style="color: var(--text-muted); font-size:0.8rem; margin-top:8px;">Processes illumination data and past records to predict risk.</p>
+                </div>
+                <div class="card-glass tech-card">
+                  <i class="fa-solid fa-microphone-lines tech-icon"></i>
+                  <h4>Voice Recognition API</h4>
+                  <p style="color: var(--text-muted); font-size:0.8rem; margin-top:8px;">Continuously monitors voice keys locally inside the browser.</p>
+                </div>
+                <div class="card-glass tech-card">
+                  <i class="fa-solid fa-wave-square tech-icon"></i>
+                  <h4>Audio Encoding & Storage</h4>
+                  <p style="color: var(--text-muted); font-size:0.8rem; margin-top:8px;">Secures audio captures immediately to verify threat evidence.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 3: FEATURES PAGE -->
+        <!-- ============================================ -->
+        <section id="view-features" class="view-section">
+          <div class="features-grid">
+            
+            <!-- Card 1 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box" style="background: rgba(255, 42, 84, 0.1); color: var(--accent-sos); border-color: rgba(255, 42, 84, 0.2);">
+                  <i class="fa-solid fa-bell"></i>
+                </div>
+                <h3 class="feature-card-title">Emergency SOS</h3>
+              </div>
+              <p class="feature-card-desc">Instantly alert emergency networks, sending dynamic maps of your live location coordinates to all trusted contacts at the touch of a button.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('emergency')">Launch SOS <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-location-crosshairs"></i>
+                </div>
+                <h3 class="feature-card-title">Live GPS Tracking</h3>
+              </div>
+              <p class="feature-card-desc">Simulated or real GPS coordinates push live movements directly to safety dashboards, giving contacts visibility into your current transit paths.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('dashboard')">View Live Maps <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box" style="background: rgba(0, 230, 118, 0.1); color: var(--color-success); border-color: rgba(0, 230, 118, 0.2);">
+                  <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <h3 class="feature-card-title">Voice Activated SOS</h3>
+              </div>
+              <p class="feature-card-desc">Web Speech API detects critical key phrases such as 'Help' or 'SOS' to bypass physical screen lock boundaries, triggering emergency mode hands-free.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); document.getElementById('btn-toggle-voice').click();">Enable Assistant <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <h3 class="feature-card-title">Shake Detection</h3>
+              </div>
+              <p class="feature-card-desc">Monitors mobile accelerometer patterns. Rapid shaking activates an emergency warning panel, preventing dropped-phone hazards and threat scenarios.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('emergency')">Configure Sensor <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 5 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-route"></i>
+                </div>
+                <h3 class="feature-card-title">AI Safe Route Recommendation</h3>
+              </div>
+              <p class="feature-card-desc">Calculates alternative walkways, taking density, illumination, and route history factors to avoid crime hot-spots.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('route')">Check Route Risks <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-compact-disc"></i>
+                </div>
+                <h3 class="feature-card-title">Automatic Audio Recording</h3>
+              </div>
+              <p class="feature-card-desc">Captures secure ambient audio clips during active emergency states using HTML5 MediaRecorder. Keeps localized backups for later retrieval.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('emergency')">Audio Panel <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 7 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <h3 class="feature-card-title">Emergency Contacts</h3>
+              </div>
+              <p class="feature-card-desc">Configure trusted circles of family, friends, or services. Manage prioritization and select who receives location-based updates first.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('contacts')">Manage Trusted List <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 8 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-building-shield"></i>
+                </div>
+                <h3 class="feature-card-title">Nearby Police Stations</h3>
+              </div>
+              <p class="feature-card-desc">Query safety maps for localized patrol services and coordinate quick directions during active transits.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('services')">Locate Stations <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 9 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-hospital"></i>
+                </div>
+                <h3 class="feature-card-title">Nearby Hospitals</h3>
+              </div>
+              <p class="feature-card-desc">Quickly find the closest emergency healthcare clinics with direct contacts, operational schedules, and directions.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('services')">Locate Medical Care <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 10 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-comments"></i>
+                </div>
+                <h3 class="feature-card-title">AI Safety Chatbot</h3>
+              </div>
+              <p class="feature-card-desc">Ask queries regarding travel guidance, women's legal rights, self-defense postures, and localized numbers dynamically.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('chatbot')">Open Safety Chat <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 11 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3 class="feature-card-title">Safety Tips</h3>
+              </div>
+              <p class="feature-card-desc">Preemptive guidelines for traveling at night, dealing with public transportation hazards, and identifying suspicious behaviors.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('resources')">Read Tips <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Card 12 -->
+            <div class="card-glass feature-card">
+              <div class="feature-card-header">
+                <div class="feature-icon-box">
+                  <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <h3 class="feature-card-title">Emergency Guidelines</h3>
+              </div>
+              <p class="feature-card-desc">Comprehensive instructions on handle critical hazards: stalking, physical threat, dynamic routes off-grid, and FIR documentation.</p>
+              <a href="#" class="feature-card-btn" onclick="event.preventDefault(); window.appRouter.navigateTo('resources')">Read Guidelines <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 4: USER REGISTRATION / LOGIN -->
+        <!-- ============================================ -->
+        <section id="view-registration" class="view-section">
+          <div class="auth-container card-glass">
+            <div class="auth-tabs">
+              <div class="auth-tab active" id="tab-login" onclick="window.appRouter.toggleAuthTab('login')">Login</div>
+              <div class="auth-tab" id="tab-register" onclick="window.appRouter.toggleAuthTab('register')">Create Account</div>
+            </div>
+            
+            <!-- Login Form Pane -->
+            <div class="auth-form-panel active" id="panel-login">
+              <form id="form-user-login" onsubmit="event.preventDefault(); window.appRouter.handleLoginSubmit();">
+                <div class="form-group">
+                  <label for="login-email">Registered Email</label>
+                  <input type="email" id="login-email" class="form-control" required placeholder="name@domain.com">
+                </div>
+                <div class="form-group">
+                  <label for="login-password">Password</label>
+                  <input type="password" id="login-password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 12px;">
+                  <i class="fa-solid fa-arrow-right-to-bracket"></i> Authenticate & Enter
+                </button>
+              </form>
+            </div>
+            
+            <!-- Registration Form Pane -->
+            <div class="auth-form-panel" id="panel-register">
+              <form id="form-user-register" onsubmit="event.preventDefault(); window.appRouter.handleRegisterSubmit();">
+                <div class="form-group">
+                  <label for="register-name">Full Name</label>
+                  <input type="text" id="register-name" class="form-control" required placeholder="Jane Doe">
+                </div>
+                <div class="form-group">
+                  <label for="register-email">Email Address</label>
+                  <input type="email" id="register-email" class="form-control" required placeholder="jane@domain.com">
+                </div>
+                <div class="form-group">
+                  <label for="register-phone">Mobile Number</label>
+                  <input type="tel" id="register-phone" class="form-control" required placeholder="+1234567890">
+                </div>
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="register-blood">Blood Group</label>
+                    <select id="register-blood" class="form-control">
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="register-medical">Emergency Medical Notes</label>
+                    <input type="text" id="register-medical" class="form-control" placeholder="Allergies, Asthma, etc.">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="register-password">Create Secure Password</label>
+                  <input type="password" id="register-password" class="form-control" required placeholder="Min 6 characters">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 12px;">
+                  <i class="fa-solid fa-user-shield"></i> Complete Safety Profile
+                </button>
+              </form>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 5: USER DASHBOARD -->
+        <!-- ============================================ -->
+        <section id="view-dashboard" class="view-section">
+          <div class="dashboard-grid">
+            
+            <div class="dashboard-left">
+              
+              <!-- Profile details overview -->
+              <div class="card-glass">
+                <div class="profile-card-full">
+                  <div class="profile-avatar-large" id="dash-profile-avatar">J</div>
+                  <div style="flex-grow: 1;">
+                    <h2 id="dash-profile-name">Jane Doe</h2>
+                    <p style="color:var(--text-muted); font-size:0.9rem;" id="dash-profile-email">jane@domain.com</p>
+                    <span class="primary-badge" style="margin-left: 0; margin-top: 8px;" id="dash-profile-badge">Protected Account</span>
+                  </div>
+                  <div>
+                    <button class="btn-secondary" onclick="window.appRouter.handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
+                  </div>
+                </div>
+                
+                <div class="profile-details-grid">
+                  <div class="profile-detail-item">
+                    <span class="profile-detail-label">Phone</span>
+                    <span class="profile-detail-value" id="dash-profile-phone">+1234567890</span>
+                  </div>
+                  <div class="profile-detail-item">
+                    <span class="profile-detail-label">Blood Group</span>
+                    <span class="profile-detail-value" id="dash-profile-blood">O+</span>
+                  </div>
+                  <div class="profile-detail-item">
+                    <span class="profile-detail-label">Medical Alerts</span>
+                    <span class="profile-detail-value" id="dash-profile-medical">None</span>
+                  </div>
+                  <div class="profile-detail-item">
+                    <span class="profile-detail-label">Current Safe Score</span>
+                    <span class="profile-detail-value" style="color: var(--color-success);" id="dash-profile-score">90 / 100</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Recent alerts triggers -->
+              <div class="card-glass">
+                <h3 style="margin-bottom:16px;"><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-sos); margin-right:8px;"></i> Recent Security Alerts</h3>
+                <ul class="log-list" id="dash-alerts-list">
+                  <li class="log-item">
+                    <div class="log-item-left">
+                      <i class="fa-solid fa-circle-exclamation log-icon-sos"></i>
+                      <div>
+                        <div class="log-title">SOS Broadcast Triggered</div>
+                        <div class="log-time">2 hours ago • Live Coordinates sent</div>
+                      </div>
+                    </div>
+                    <span class="log-item-right" style="color: var(--accent-sos);">Alert Complete</span>
+                  </li>
+                  <li class="log-item">
+                    <div class="log-item-left">
+                      <i class="fa-solid fa-circle-check log-icon-check"></i>
+                      <div>
+                        <div class="log-title">Safe Check-in Completed</div>
+                        <div class="log-time">Yesterday • Home location</div>
+                      </div>
+                    </div>
+                    <span class="log-item-right" style="color: var(--color-success);">Logged</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- Saved Locations CRUD Section -->
+              <div class="card-glass">
+                <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-map-pin" style="color: var(--primary); margin-right: 8px;"></i> Saved Safe Locations</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Quick access zones for rapid navigation check-ins.</p>
+                
+                <form id="form-save-location" onsubmit="event.preventDefault(); window.appRouter.handleSaveLocation();" style="display:flex; gap:12px; margin-bottom: 16px;">
+                  <input type="text" id="new-loc-name" class="form-control" placeholder="Label (e.g. Home, Work)" required style="flex:1;">
+                  <input type="text" id="new-loc-address" class="form-control" placeholder="Coordinates or Address" required style="flex:2;">
+                  <button type="submit" class="btn-primary" style="padding: 12px 20px;"><i class="fa-solid fa-plus"></i> Save</button>
+                </form>
+                
+                <ul class="saved-loc-list" id="dash-locations-list">
+                  <!-- Will be loaded dynamically -->
+                </ul>
+              </div>
+              
+            </div>
+            
+            <div class="dashboard-right">
+              
+              <!-- Safety Score Gauge widget -->
+              <div class="card-glass safety-score-widget">
+                <h3>AI Safety Rating</h3>
+                <div class="score-circle-container">
+                  <svg class="score-svg">
+                    <circle class="score-svg-bg" cx="70" cy="70" r="60"></circle>
+                    <circle class="score-svg-fill" id="score-circle-fill" cx="70" cy="70" r="60"></circle>
+                  </svg>
+                  <span class="score-text-val" id="score-percentage-text">92%</span>
+                </div>
+                <div class="score-status" id="score-rating-status" style="color: var(--color-success);">High Security</div>
+                <p class="score-advice" id="score-rating-advice">Awesome! You have enabled voice activation and configured primary contacts, minimizing travel risk profiles.</p>
+              </div>
+              
+              <!-- Dynamic travel history summaries -->
+              <div class="card-glass">
+                <h3 style="margin-bottom:16px;"><i class="fa-solid fa-route" style="color: var(--color-info); margin-right: 8px;"></i> Route History</h3>
+                <ul class="log-list" id="dash-travel-list">
+                  <!-- Will be updated dynamically -->
+                  <li class="log-item" style="color: var(--text-muted); text-align: center; justify-content: center; padding: 20px;">
+                    No recent travel routes calculated yet.
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- Quick SOS control switch settings -->
+              <div class="card-glass">
+                <h3 style="margin-bottom:16px;"><i class="fa-solid fa-sliders" style="color: var(--primary); margin-right:8px;"></i> Emergency Console Settings</h3>
+                <div class="form-group" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                  <label for="set-countdown-val">Countdown Delay</label>
+                  <select id="set-countdown-val" class="form-control" style="width:100px; padding:8px;">
+                    <option value="3">3s</option>
+                    <option value="5" selected>5s</option>
+                    <option value="10">10s</option>
+                  </select>
+                </div>
+                <div class="form-group" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                  <label for="set-audio-rec">Automatic Audio Record</label>
+                  <input type="checkbox" id="set-audio-rec" checked style="width: 20px; height: 20px; cursor: pointer;">
+                </div>
+                <div class="form-group" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                  <label for="set-siren-sound">Sound Alarm Siren</label>
+                  <input type="checkbox" id="set-siren-sound" checked style="width: 20px; height: 20px; cursor: pointer;">
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 6: EMERGENCY DASHBOARD (SOS CONSOLE) -->
+        <!-- ============================================ -->
+        <section id="view-emergency" class="view-section">
+          <div class="emergency-dashboard-grid">
+            
+            <div class="card-glass emergency-main">
+              <div class="sos-button-wrapper">
+                <div class="sos-pulse-circle"></div>
+                <button class="btn-huge-sos" id="btn-main-big-sos">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <span>TRIGGER SOS</span>
+                </button>
+              </div>
+              <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; max-width:320px; line-height: 1.5;">
+                Press and hold (or double tap) to activate emergency rescue. Triggers notification logs to trusted circles.
+              </p>
+            </div>
+            
+            <div class="emergency-info-panel">
+              <!-- Live Tracking card when SOS active -->
+              <div class="card-glass">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                  <h3><i class="fa-solid fa-tower-broadcast" style="color:var(--accent-sos); margin-right:8px;"></i> Broadcast Live Console</h3>
+                  <span class="primary-badge" style="background: rgba(255, 42, 84, 0.12); color:var(--accent-sos); border-color: rgba(255, 42, 84, 0.25);" id="sos-active-badge">Inactive State</span>
+                </div>
+                
+                <!-- Audio Recording Indicator -->
+                <div class="audio-visualizer-container" id="sos-audio-viz">
+                  <div class="rec-indicator">
+                    <div class="rec-dot"></div>
+                    <span id="audio-rec-text">Microphone Idle</span>
+                  </div>
+                  <div class="audio-wave-bars">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                  </div>
+                </div>
+                
+                <!-- Live Coordinates Display -->
+                <div style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:16px; border-bottom: var(--border-glass); padding-bottom:16px;">
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">LATEST GPS LATITUDE</span>
+                    <strong style="font-family: monospace; font-size:1.1rem;" id="sos-coord-lat">--.------</strong>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">LATEST GPS LONGITUDE</span>
+                    <strong style="font-family: monospace; font-size:1.1rem;" id="sos-coord-lng">--.------</strong>
+                  </div>
+                </div>
+                
+                <!-- Status List stepper -->
+                <div style="margin-top:16px;">
+                  <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:12px;">ACTIVATION LIFECYCLE</span>
+                  <ul class="sos-tracking-stepper">
+                    <li class="tracking-step pending" id="step-gps">
+                      <i class="fa-solid fa-location-arrow"></i>
+                      <span>Locking current GPS coordinates</span>
+                    </li>
+                    <li class="tracking-step pending" id="step-sms">
+                      <i class="fa-solid fa-comment-sms"></i>
+                      <span>Transmitting emergency distress SMS to primary contacts</span>
+                    </li>
+                    <li class="tracking-step pending" id="step-audio">
+                      <i class="fa-solid fa-microphone"></i>
+                      <span>Initializing continuous atmospheric audio recording</span>
+                    </li>
+                    <li class="tracking-step pending" id="step-police">
+                      <i class="fa-solid fa-user-shield"></i>
+                      <span>Relaying alerts to nearest localized Police Control Desk</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 7: AI SAFETY ASSISTANT CHATBOT -->
+        <!-- ============================================ -->
+        <section id="view-chatbot" class="view-section">
+          <div class="chatbot-container">
+            
+            <!-- Quick prompt side menu -->
+            <div class="chatbot-history-panel card-glass">
+              <h3>Interactive Topics</h3>
+              <p style="color:var(--text-muted); font-size:0.8rem;">Tap common security queries to get quick guidance.</p>
+              <div class="chatbot-quick-prompts">
+                <button class="btn-quick-prompt" onclick="window.safetyChatbot.askQuickPrompt('I feel unsafe walking alone at night. What should I do?')">
+                  <i class="fa-solid fa-question-circle"></i> Walking alone at night
+                </button>
+                <button class="btn-quick-prompt" onclick="window.safetyChatbot.askQuickPrompt('What are my rights if a police officer refuses to file a Zero FIR?')">
+                  <i class="fa-solid fa-scale-balanced"></i> Zero FIR legal rights
+                </button>
+                <button class="btn-quick-prompt" onclick="window.safetyChatbot.askQuickPrompt('What self-defense actions work if someone grabs me from behind?')">
+                  <i class="fa-solid fa-user-ninja"></i> Stalker self-defense
+                </button>
+                <button class="btn-quick-prompt" onclick="window.safetyChatbot.askQuickPrompt('What details should I verify before entering a late-night cab?')">
+                  <i class="fa-solid fa-cab"></i> Cab transit safety checks
+                </button>
+                <button class="btn-quick-prompt" onclick="window.safetyChatbot.askQuickPrompt('What are the official national women helpline directories?')">
+                  <i class="fa-solid fa-phone-volume"></i> Official safety numbers
+                </button>
+              </div>
+            </div>
+            
+            <!-- Chat panel -->
+            <div class="chatbot-main-chat card-glass">
+              <div class="chat-messages-area" id="chat-conversation-log">
+                <div class="chat-bubble bot">
+                  Hello! I am your AI Safety Assistant. How can I help you today? Ask me about emergency procedures, self-defense moves, transit safety, or legal rights.
+                </div>
+              </div>
+              
+              <!-- Typing effect bubble -->
+              <div class="chat-typing-indicator" id="chat-bot-typing">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              
+              <!-- Input box -->
+              <form id="form-chatbot-input" class="chat-input-bar" onsubmit="event.preventDefault(); window.safetyChatbot.handleSendMessage();">
+                <input type="text" id="chatbot-user-msg" class="form-control" placeholder="Ask about safety tips, self-defense moves, legal rights..." required autocomplete="off">
+                <button type="submit" class="btn-primary" style="padding:0 24px;">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </form>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 8: SAFE ROUTE FINDER -->
+        <!-- ============================================ -->
+        <section id="view-route" class="view-section">
+          <div class="route-finder-grid">
+            
+            <div class="route-finder-sidebar card-glass">
+              <h3>Safe Route Planner</h3>
+              <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:12px;">Map the safest paths based on localized safety statistics, crime indexes, and street illumination.</p>
+              
+              <form id="form-route-search" onsubmit="event.preventDefault(); window.safeRouter.calculateSafeRoute();">
+                <div class="form-group">
+                  <label for="route-start">Starting Location</label>
+                  <input type="text" id="route-start" class="form-control" placeholder="Enter origin address" required value="Central Park Plaza">
+                </div>
+                <div class="form-group">
+                  <label for="route-dest">Destination</label>
+                  <input type="text" id="route-dest" class="form-control" placeholder="Enter destination" required value="Metro Grand Station">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                  <i class="fa-solid fa-map-location-dot"></i> Plot Safe Routes
+                </button>
+              </form>
+              
+              <!-- Safety Score details -->
+              <div class="card-glass risk-score-card" id="route-risk-badge-box">
+                <div class="risk-score-header">
+                  <h4 style="margin:0;">Safety Overview</h4>
+                  <span class="risk-level-badge safe" id="route-risk-status">Low Risk</span>
+                </div>
+                
+                <div class="risk-indicators-grid">
+                  <div class="risk-indicator-item">
+                    <span class="risk-indicator-label">Travel Time</span>
+                    <span class="risk-indicator-value" id="route-val-time">14 mins</span>
+                  </div>
+                  <div class="risk-indicator-item">
+                    <span class="risk-indicator-label">Distance</span>
+                    <span class="risk-indicator-value" id="route-val-dist">3.8 km</span>
+                  </div>
+                  <div class="risk-indicator-item">
+                    <span class="risk-indicator-label">Street Lights</span>
+                    <span class="risk-indicator-value" id="route-val-lights">92% Cover</span>
+                  </div>
+                  <div class="risk-indicator-item">
+                    <span class="risk-indicator-label">Crowd Density</span>
+                    <span class="risk-indicator-value" id="route-val-crowd">Moderate</span>
+                  </div>
+                </div>
+                
+                <div style="margin-top:16px; font-size:0.75rem; color:var(--text-muted); border-top: var(--border-glass); padding-top:12px;" id="route-safety-advice-text">
+                  This route avoids the crime-prone sector along Elm Street, providing fully-lit alternative walkways.
+                </div>
+              </div>
+            </div>
+            
+            <div class="route-map-container">
+              <div class="route-leaflet-map" id="map-route-node"></div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 9: NEARBY SERVICES -->
+        <!-- ============================================ -->
+        <section id="view-services" class="view-section">
+          <div class="services-view-grid">
+            
+            <div class="services-sidebar card-glass">
+              <h3>Emergency Locators</h3>
+              <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:12px;">Locate localized public assistance services near your current GPS checkpoint.</p>
+              
+              <div class="services-toggles">
+                <button class="service-toggle-btn active" data-type="police">
+                  <span><i class="fa-solid fa-building-shield service-toggle-icon"></i> Police Stations</span>
+                  <span class="primary-badge" style="background:rgba(0, 176, 255, 0.12); color:var(--color-info); border-color:rgba(0, 176, 255, 0.2);">Active</span>
+                </button>
+                <button class="service-toggle-btn active" data-type="hospital">
+                  <span><i class="fa-solid fa-hospital-user service-toggle-icon"></i> Hospitals</span>
+                  <span class="primary-badge" style="background:rgba(255, 42, 84, 0.12); color:var(--accent-sos); border-color:rgba(255, 42, 84, 0.2);">Active</span>
+                </button>
+                <button class="service-toggle-btn active" data-type="women">
+                  <span><i class="fa-solid fa-hands-holding-child service-toggle-icon"></i> Women Centers</span>
+                  <span class="primary-badge" style="background:rgba(0, 230, 118, 0.12); color:var(--color-success); border-color:rgba(0, 230, 118, 0.2);">Active</span>
+                </button>
+              </div>
+              
+              <!-- Nearby Services List -->
+              <h4 style="margin-top: 12px;">Nearby Operations</h4>
+              <div class="services-list-container" id="nearby-services-cards">
+                <!-- Dynamically populated card items -->
+              </div>
+            </div>
+            
+            <div class="route-map-container">
+              <div class="route-leaflet-map" id="map-services-node"></div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 10: EMERGENCY CONTACTS -->
+        <!-- ============================================ -->
+        <section id="view-contacts" class="view-section">
+          <div class="contacts-grid">
+            
+            <div class="card-glass">
+              <h3>Trusted Contacts Network</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Manage the list of individuals receiving immediate geographic and audio status briefs when SOS triggers.</p>
+              
+              <div class="contacts-list" id="contacts-manager-list">
+                <!-- Loaded dynamically from localStorage/default state -->
+              </div>
+            </div>
+            
+            <div class="card-glass">
+              <h3>Add Trusted Contact</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Provide basic coordinates to link a contact to the alert network.</p>
+              
+              <form id="form-add-contact" onsubmit="event.preventDefault(); window.appRouter.handleAddContactSubmit();">
+                <div class="form-group">
+                  <label for="contact-input-name">Name</label>
+                  <input type="text" id="contact-input-name" class="form-control" required placeholder="Name (e.g. Mom, Friend)">
+                </div>
+                <div class="form-group">
+                  <label for="contact-input-phone">Phone Number</label>
+                  <input type="tel" id="contact-input-phone" class="form-control" required placeholder="+1987654321">
+                </div>
+                <div class="form-group">
+                  <label for="contact-input-email">Email Address (Optional)</label>
+                  <input type="email" id="contact-input-email" class="form-control" placeholder="parent@domain.com">
+                </div>
+                <div class="form-group">
+                  <label for="contact-input-relation">Relation</label>
+                  <select id="contact-input-relation" class="form-control">
+                    <option value="Parent">Parent</option>
+                    <option value="Spouse">Spouse / Partner</option>
+                    <option value="Sibling">Sibling</option>
+                    <option value="Friend">Friend</option>
+                    <option value="Guardian">Guardian</option>
+                  </select>
+                </div>
+                <div class="form-group" style="flex-direction:row; align-items:center; gap:12px;">
+                  <input type="checkbox" id="contact-input-primary" style="width:20px; height:20px; cursor:pointer;">
+                  <label for="contact-input-primary" style="cursor:pointer; margin-bottom: 0;">Mark as Primary Contact</label>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 12px;">
+                  <i class="fa-solid fa-user-plus"></i> Save to Contacts List
+                </button>
+              </form>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 11: SAFETY RESOURCES -->
+        <!-- ============================================ -->
+        <section id="view-resources" class="view-section">
+          <div class="resources-tabs">
+            <button class="resource-tab-btn active" data-tab="helplines" onclick="window.appRouter.toggleResourceTab('helplines')">Helpline Numbers</button>
+            <button class="resource-tab-btn" data-tab="legal" onclick="window.appRouter.toggleResourceTab('legal')">Women Legal Rights</button>
+            <button class="resource-tab-btn" data-tab="schemes" onclick="window.appRouter.toggleResourceTab('schemes')">Government Schemes</button>
+            <button class="resource-tab-btn" data-tab="defense" onclick="window.appRouter.toggleResourceTab('defense')">Self-Defense Guidelines</button>
+          </div>
+          
+          <!-- Helplines Tab Content -->
+          <div class="resources-content-pane active card-glass" id="resource-pane-helplines">
+            <h3>Helpline Directories</h3>
+            <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Immediate hotline connection paths across national centers.</p>
+            
+            <table class="helpline-table">
+              <thead>
+                <tr>
+                  <th>Service Desk</th>
+                  <th>Hotline Dial</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>National Women Helpline</td>
+                  <td class="helpline-number">1091</td>
+                  <td>24/7 National support line for domestic violence, abuse, and emergency rescue.</td>
+                </tr>
+                <tr>
+                  <td>Domestic Abuse Support Line</td>
+                  <td class="helpline-number">181</td>
+                  <td>Confidential help desk assisting victims of domestic violence and sexual abuse.</td>
+                </tr>
+                <tr>
+                  <td>National Emergency Response</td>
+                  <td class="helpline-number">112</td>
+                  <td>Universal emergency desk integration (Police, Fire, Medical services).</td>
+                </tr>
+                <tr>
+                  <td>Cyber Crime Reporting Hub</td>
+                  <td class="helpline-number">1930</td>
+                  <td>National desk reporting online abuses, threats, and financial cyber frauds.</td>
+                </tr>
+                <tr>
+                  <td>Student/Child Help Line</td>
+                  <td class="helpline-number">1098</td>
+                  <td>Urgent rescue and shelter facilities support line for children.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Legal Rights Tab Content -->
+          <div class="resources-content-pane card-glass" id="resource-pane-legal">
+            <h3 style="margin-bottom:16px;">Core Legal Rights of Women</h3>
+            <div class="legal-cards-grid">
+              <div class="card-glass legal-card">
+                <h3>1. Right to File a Zero FIR</h3>
+                <p>A victim of a crime can file an FIR at any police station, irrespective of where the incident occurred. The police cannot refuse registration, and must subsequently transfer the FIR to the jurisdictional police precinct.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>2. Section 46 of CrPC</h3>
+                <p>Guarantees that a woman cannot be arrested after sunset and before sunrise except under exceptional circumstances, and only by a female police officer who has obtained judicial magistrate clearance beforehand.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>3. Right to Identity Protection</h3>
+                <p>Under Section 228-A of IPC, it is a punishable offense to publish or disclose the identity of a victim of sexual assault, preserving privacy throughout investigation processes.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>4. Right to Free Legal Assistance</h3>
+                <p>Women are entitled to free legal aid through state/national legal services organizations (NALSA/SALSA), regardless of income bracket or crime category.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Schemes Tab Content -->
+          <div class="resources-content-pane card-glass" id="resource-pane-schemes">
+            <h3 style="margin-bottom:16px;">National Security Schemes</h3>
+            <div class="legal-cards-grid">
+              <div class="card-glass legal-card">
+                <h3>Nirbhaya Fund Initiatives</h3>
+                <p>Government initiatives aiming to enhance safety parameters: implementing CCTV grids, safety alerts in transit services, fast-track judiciary portals, and dedicated emergency desks.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>One Stop Centres (Sakhi Scheme)</h3>
+                <p>Provides integrated support systems including police assistance, medical aid, psycho-social counseling, and short-term shelter under a single roof for women affected by violence.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>Mahila Police Volunteers</h3>
+                <p>A bridge between citizens and police authority. Dedicated local female facilitators mapping local domestic incidents, stalkings, and reporting vulnerabilities.</p>
+              </div>
+              <div class="card-glass legal-card">
+                <h3>Working Women Hostels</h3>
+                <p>Establishment of safe, affordable housing spaces with modern security arrays to encourage occupational mobility and secure lodging environments for working women.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Self-Defense Tab Content -->
+          <div class="resources-content-pane" id="resource-pane-defense">
+            <div class="defense-grid">
+              <div class="card-glass defense-card">
+                <i class="fa-solid fa-user-ninja"></i>
+                <h3>Palm Strike</h3>
+                <p style="margin-top:8px;">Aim for the attacker's nose or under-chin using the heel of your open palm. Push upwards and forwards with your full body weight to disorient them.</p>
+              </div>
+              <div class="card-glass defense-card">
+                <i class="fa-solid fa-shoe-prints"></i>
+                <h3>Groin Kick</h3>
+                <p style="margin-top:8px;">Deliver a swift upward kick utilizing your instep (top of foot/shin) directly to their groin. Maintain balance and push away immediately.</p>
+              </div>
+              <div class="card-glass defense-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h3>Elbow Strike</h3>
+                <p style="margin-top:8px;">If grabbed from behind, drive the point of your elbow backward into the attacker's ribs, neck, or temples. Forceful strikes will instantly weaken their grip.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ============================================ -->
+        <!-- VIEW 12: CONTACT US / FAQ -->
+        <!-- ============================================ -->
+        <section id="view-contact-us" class="view-section">
+          <div class="contact-us-grid">
+            
+            <div class="card-glass">
+              <h3>Drop Us A Message</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Encountered a bug or have safety ideas? Let us know!</p>
+              
+              <form id="form-contact-feedback" onsubmit="event.preventDefault(); window.appRouter.handleFeedbackSubmit();">
+                <div class="form-group">
+                  <label for="contact-feedback-name">Your Name</label>
+                  <input type="text" id="contact-feedback-name" class="form-control" required placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                  <label for="contact-feedback-email">Your Email</label>
+                  <input type="email" id="contact-feedback-email" class="form-control" required placeholder="email@domain.com">
+                </div>
+                <div class="form-group">
+                  <label>Overall App Rating</label>
+                  <div class="feedback-stars-container" id="feedback-stars-box">
+                    <i class="fa-solid fa-star feedback-star" data-rating="1"></i>
+                    <i class="fa-solid fa-star feedback-star" data-rating="2"></i>
+                    <i class="fa-solid fa-star feedback-star" data-rating="3"></i>
+                    <i class="fa-solid fa-star feedback-star" data-rating="4"></i>
+                    <i class="fa-solid fa-star feedback-star" data-rating="5"></i>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="contact-feedback-msg">Message / Suggestion</label>
+                  <textarea id="contact-feedback-msg" class="form-control" rows="4" required placeholder="Detail your experience or question..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                  <i class="fa-solid fa-paper-plane"></i> Send Feedback
+                </button>
+              </form>
+            </div>
+            
+            <div class="faq-accordion">
+              <h3>Frequently Asked Questions</h3>
+              
+              <div class="accordion-item" onclick="window.appRouter.toggleAccordion(this)">
+                <div class="accordion-header">
+                  <span>How does Voice Activated SOS function?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-body">
+                  <div class="accordion-content">
+                    When enabled, SafeHer leverages the browser's Web Speech API implementation to continuously process speech inputs. Recognizable distress triggers immediately engage the active SOS alert protocol without needing app interactions.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item" onclick="window.appRouter.toggleAccordion(this)">
+                <div class="accordion-header">
+                  <span>Are my coordinates shared with the public?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-body">
+                  <div class="accordion-content">
+                    Absolutely not. Location coordinates are processed locally and securely dispatched only to your designated trusted contacts network. SafeHer guarantees privacy compliance; coordinates are never saved publicly.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item" onclick="window.appRouter.toggleAccordion(this)">
+                <div class="accordion-header">
+                  <span>Will the audio recorder work if my phone screen is locked?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-body">
+                  <div class="accordion-content">
+                    Audio recording is managed inside standard HTML5 scopes. As long as the browser processes active tabs (background processes allowed), the microphone stream captures threat sounds securely.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item" onclick="window.appRouter.toggleAccordion(this)">
+                <div class="accordion-header">
+                  <span>How is the Route Safety Level determined?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-body">
+                  <div class="accordion-content">
+                    Our AI recommendation algorithm evaluates routes using static safety attributes (e.g. lit street lamp coverage, proximity to hospitals/stations, historical records, and crowd estimates at selected hours) to classify transit paths into low, moderate, or high risk zones.
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 13: ADMIN ANALYTICS DASHBOARD -->
+        <!-- ============================================ -->
+        <section id="view-admin" class="view-section">
+          <div class="admin-grid" style="display:flex; flex-direction:column; gap:24px;">
+            
+            <!-- Cards Row -->
+            <div class="grid-4">
+              <div class="card-glass stat-card">
+                <div class="stat-num" style="color: var(--primary);">12,452</div>
+                <div class="stat-label">Registered Shield Profiles</div>
+              </div>
+              <div class="card-glass stat-card">
+                <div class="stat-num" style="color: var(--accent-sos);">1,492</div>
+                <div class="stat-label">SOS Dispatches Managed</div>
+              </div>
+              <div class="card-glass stat-card">
+                <div class="stat-num" style="color: var(--color-success);">324</div>
+                <div class="stat-label">Active Transits Online</div>
+              </div>
+              <div class="card-glass stat-card">
+                <div class="stat-num" style="color: var(--color-info);">18,240</div>
+                <div class="stat-label">AI Chatbot Queries</div>
+              </div>
+            </div>
+
+            <!-- Graphs and Heatmap Row -->
+            <div class="grid-2">
+              
+              <!-- Simulated Heatmap of Unsafe Areas -->
+              <div class="card-glass" style="display:flex; flex-direction:column; height: 100%;">
+                <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-fire" style="color:var(--accent-sos);"></i> Unsafe Zone Heatmap</h3>
+                <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:16px;">Visualizing crime density reports and low-illumination sectors.</p>
+                <div style="flex-grow:1; background:rgba(0,0,0,0.2); border:var(--border-glass); border-radius:var(--border-radius-md); height: 280px; position:relative; overflow:hidden;">
+                  <!-- Mock Map Background with CSS Heatmap Circles -->
+                  <div style="width:100%; height:100%; filter:grayscale(100%) opacity(0.35); background-image:radial-gradient(circle, #3a1c71 10%, transparent 10.5%), radial-gradient(circle, #3a1c71 10%, transparent 10.5%); background-size:20px 20px; background-position:0 0, 10px 10px;"></div>
+                  
+                  <!-- Heatmap Glowing Points -->
+                  <div style="position:absolute; top:25%; left:35%; width:60px; height:60px; border-radius:50%; background:rgba(255,42,84,0.45); filter:blur(12px); animation: pulseOuter 2s infinite;"></div>
+                  <div style="position:absolute; top:25%; left:35%; width:20px; height:20px; border-radius:50%; background:var(--accent-sos); filter:blur(3px);"></div>
+                  
+                  <div style="position:absolute; top:60%; left:65%; width:80px; height:80px; border-radius:50%; background:rgba(255,42,84,0.4); filter:blur(16px); animation: pulseOuter 2.5s infinite alternate;"></div>
+                  <div style="position:absolute; top:60%; left:65%; width:30px; height:30px; border-radius:50%; background:var(--accent-sos); filter:blur(4px);"></div>
+                  
+                  <div style="position:absolute; top:45%; left:75%; width:50px; height:50px; border-radius:50%; background:rgba(255,214,0,0.35); filter:blur(10px);"></div>
+                  
+                  <div style="position:absolute; top:12px; left:12px; padding:6px 12px; border-radius:30px; background:rgba(10,6,18,0.75); border:var(--border-glass); font-size:0.75rem; font-weight:600; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-circle" style="color:var(--accent-sos); font-size:8px;"></i> Midtown Sector High Density
+                  </div>
+                </div>
+              </div>
+
+              <!-- Graphs Section -->
+              <div class="card-glass" style="display:flex; flex-direction:column; gap:16px;">
+                <h3><i class="fa-solid fa-chart-simple" style="color:var(--primary);"></i> Weekly SOS Alarms</h3>
+                <!-- CSS styled bar chart -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; height:180px; padding:20px 10px 0 10px; border-bottom:var(--border-glass);">
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:45px; background:rgba(255,42,84,0.25); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); transition:var(--transition-smooth); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">12</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Mon</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:75px; background:rgba(255,42,84,0.25); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">22</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Tue</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:110px; background:rgba(255,42,84,0.45); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">35</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Wed</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:60px; background:rgba(255,42,84,0.25); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">18</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Thu</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:140px; background:rgba(255,42,84,0.65); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px; box-shadow:0 0 10px rgba(255,42,84,0.2);">48</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Fri</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:120px; background:rgba(255,42,84,0.45); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">38</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Sat</span>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:12%;">
+                    <div style="width:100%; height:50px; background:rgba(255,42,84,0.25); border-radius:4px 4px 0 0; border:1px solid var(--accent-sos); display:flex; align-items:flex-start; justify-content:center; font-size:10px; font-weight:bold; padding-top:4px;">15</div>
+                    <span style="font-size:10px; color:var(--text-muted);">Sun</span>
+                  </div>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-muted); text-align:center;">SOS alert frequency surges by 32% during weekend late nights.</div>
+              </div>
+
+            </div>
+
+            <!-- Safety Reports Filed log -->
+            <div class="card-glass">
+              <h3 style="margin-bottom:16px;"><i class="fa-solid fa-receipt" style="color:var(--color-warning);"></i> Recent Public Safety Reports</h3>
+              <ul class="log-list">
+                <li class="log-item">
+                  <div class="log-item-left">
+                    <i class="fa-solid fa-lightbulb" style="color:var(--color-warning);"></i>
+                    <div>
+                      <div class="log-title">Streetlight Broken (Sector 4 Avenue)</div>
+                      <div class="log-time">Reported by Jane Doe • 10 mins ago</div>
+                    </div>
+                  </div>
+                  <span class="log-item-right" style="color: var(--color-warning); font-weight:600;">Pending Municipal Relay</span>
+                </li>
+                <li class="log-item">
+                  <div class="log-item-left">
+                    <i class="fa-solid fa-users-viewfinder" style="color:var(--color-info);"></i>
+                    <div>
+                      <div class="log-title">Suspicious Loitering Reported near Subway Exit B</div>
+                      <div class="log-time">Reported by Sarah Doe • 2 hours ago</div>
+                    </div>
+                  </div>
+                  <span class="log-item-right" style="color: var(--color-success); font-weight:600;">Precinct Dispatched</span>
+                </li>
+                <li class="log-item">
+                  <div class="log-item-left">
+                    <i class="fa-solid fa-circle-check" style="color:var(--color-success);"></i>
+                    <div>
+                      <div class="log-title">Construction Scaffolding Obstruction Cleared</div>
+                      <div class="log-time">Reported by Guest • 1 day ago</div>
+                    </div>
+                  </div>
+                  <span class="log-item-right" style="color: var(--text-muted);">Resolved</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </section>
+        
+      </main>
+
+      <!-- Footer section -->
+      <footer style="background-color: var(--bg-secondary); border-top: var(--border-glass); padding: 40px 32px 20px 32px; margin-top: auto; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap:32px;">
+          <div>
+            <h4 style="font-size:1.4rem; color:var(--text-main); margin-bottom:12px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> SafeHer</h4>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5; max-width:320px;">AI-powered women safety platform designed for immediate emergency assistance, safety route recommendation, and real-time location support.</p>
+          </div>
+          <div>
+            <h4 style="color:var(--text-main); font-size:0.95rem; margin-bottom:12px;">Quick Links</h4>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.85rem;">
+              <li><a href="#" onclick="event.preventDefault(); window.appRouter.navigateTo('home')" style="color:var(--text-muted); text-decoration:none; transition:var(--transition-smooth);">Home Portal</a></li>
+              <li><a href="#" onclick="event.preventDefault(); window.appRouter.navigateTo('about')" style="color:var(--text-muted); text-decoration:none; transition:var(--transition-smooth);">About Mission</a></li>
+              <li><a href="#" onclick="event.preventDefault(); window.appRouter.navigateTo('features')" style="color:var(--text-muted); text-decoration:none; transition:var(--transition-smooth);">Security Features</a></li>
+              <li><a href="#" onclick="event.preventDefault(); window.appRouter.navigateTo('resources')" style="color:var(--text-muted); text-decoration:none; transition:var(--transition-smooth);">Safety Resources</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--text-main); font-size:0.95rem; margin-bottom:12px;">Legal & Security</h4>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.85rem;">
+              <li><a href="#" onclick="event.preventDefault();" style="color:var(--text-muted); text-decoration:none;">Privacy Policy</a></li>
+              <li><a href="#" onclick="event.preventDefault();" style="color:var(--text-muted); text-decoration:none;">Terms & Conditions</a></li>
+              <li><a href="#" onclick="event.preventDefault();" style="color:var(--text-muted); text-decoration:none;">Encryption Details</a></li>
+              <li><a href="#" onclick="event.preventDefault();" style="color:var(--text-muted); text-decoration:none;">Compliance Audits</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--text-main); font-size:0.95rem; margin-bottom:12px;">Emergency Hotlines</h4>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.85rem;">
+              <li>National Women Line: <strong style="color:var(--accent-sos);">1091</strong></li>
+              <li>Universal Rescue Desk: <strong style="color:var(--primary);">112</strong></li>
+              <li>Domestic Violence Helpline: <strong style="color:var(--primary);">181</strong></li>
+              <li>Student Safety Desk: <strong style="color:var(--primary);">1098</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:var(--border-glass); padding-top:20px; font-size:0.8rem; color:var(--text-muted);">
+          <span>&copy; 2026 SafeHer Safety Ecosystem Network. All rights reserved.</span>
+          <div style="display:flex; gap:16px; font-size:1.1rem;">
+            <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-linkedin"></i></a>
+          </div>
+        </div>
+      </footer>
+      
+    <!-- Mobile Bottom Navigation Bar (Visible only on mobile devices) -->
+    <nav class="mobile-bottom-nav">
+      <a href="#" class="nav-link active" data-view="home">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-link" data-view="dashboard">
+        <i class="fa-solid fa-table-columns"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-link emergency-nav-item" data-view="emergency">
+        <div class="emergency-nav-circle">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+        <span>SOS</span>
+      </a>
+      <a href="#" class="nav-link" data-view="route">
+        <i class="fa-solid fa-route"></i>
+        <span>Route</span>
+      </a>
+      <a href="#" class="nav-link" data-view="chatbot">
+        <i class="fa-solid fa-robot"></i>
+        <span>Chatbot</span>
+      </a>
+    </nav>
+
+  </div>
+  
+  <!-- Global SOS Active Flashing Countdown Overlay -->
+  <div class="global-sos-overlay" id="global-emergency-overlay">
+    <div class="overlay-countdown-ring">
+      <svg class="countdown-svg">
+        <circle class="countdown-svg-bg" cx="100" cy="100" r="90"></circle>
+        <circle class="countdown-svg-fill" id="overlay-countdown-fill" cx="100" cy="100" r="90" style="stroke-dasharray: 565; stroke-dashoffset: 0;"></circle>
+      </svg>
+      <span class="overlay-countdown-num" id="overlay-countdown-timer">5</span>
+    </div>
+    <h2 class="overlay-title">INITIATING EMERGENCY SOS DISPATCH</h2>
+    <p class="overlay-subtitle" id="overlay-status-desc">Broadcasting geographic location coordinates and commencing audio logging in 5 seconds...</p>
+    <button class="btn-primary" style="background:var(--text-main); color:var(--text-dark); padding:16px 36px; border-radius:30px; font-weight:700;" id="btn-cancel-sos-overlay">
+      <i class="fa-solid fa-ban"></i> CANCEL DISPATCH (FALSE ALARM)
+    </button>
+  </div>
+  
+  <!-- Leaflet Map JS CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Core SPA Modules -->
+  <script src="js/chatbot.js"></script>
+  <script src="js/routes.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
